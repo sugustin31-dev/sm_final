@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('comment-form');
   const nameInput = document.getElementById('name');
   const messageInput = document.getElementById('message');
+  const ratingSelect = document.getElementById('rating');
   const submitBtn = document.getElementById('submit-btn');
   const errorMsg = document.getElementById('error-msg');
   const container = document.getElementById('comments-container');
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="comment">
         <span class="name">${escapeHtml(c.name)}</span>
         <span class="date">${formatDate(c.created_at)}</span>
+        <span class="stars">${renderStars(c.rating)}</span>
         <p class="message">${escapeHtml(c.message)}</p>
       </div>
     `).join('');
@@ -36,6 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  function renderStars(rating) {
+    const full = '★'.repeat(rating);
+    const empty = '☆'.repeat(5 - rating);
+    return full + empty;
   }
 
   function formatDate(dateStr) {
@@ -64,9 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const name = nameInput.value.trim();
     const message = messageInput.value.trim();
+    const rating = parseInt(ratingSelect.value, 10);
 
-    if (!name || !message) {
-      showError('Completá ambos campos.');
+    if (!name || !message || !rating) {
+      showError('Completá todos los campos.');
       return;
     }
 
@@ -77,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('api/comment.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, message }),
+        body: JSON.stringify({ name, message, rating }),
       });
 
       const data = await res.json();

@@ -10,14 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input = json_decode(file_get_contents('php://input'), true);
 
-if (!$input || empty($input['name']) || empty($input['message'])) {
+if (!$input || empty($input['name']) || empty($input['message']) || !isset($input['rating'])) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Name and message are required']);
+    echo json_encode(['success' => false, 'error' => 'Name, message, and rating are required']);
     exit;
 }
 
 $name    = trim(strip_tags($input['name']));
 $message = trim(strip_tags($input['message']));
+$rating  = (int) $input['rating'];
 
 if (mb_strlen($name) < 1 || mb_strlen($name) > 60) {
     http_response_code(400);
@@ -31,10 +32,16 @@ if (mb_strlen($message) < 1 || mb_strlen($message) > 500) {
     exit;
 }
 
+if ($rating < 1 || $rating > 5) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Rating must be between 1 and 5']);
+    exit;
+}
+
 try {
     $pdo = getPDO();
-    $stmt = $pdo->prepare('INSERT INTO comments (name, message) VALUES (:name, :message)');
-    $stmt->execute([':name' => $name, ':message' => $message]);
+    $stmt = $pdo->prepare('INSERT INTO comments (name, message, rating) VALUES (:name, :message, :rating)');
+    $stmt->execute([':name' => $name, ':message' => $message, ':rating' => $rating]);
 
     echo json_encode(['success' => true, 'id' => (int) $pdo->lastInsertId()]);
 } catch (PDOException $e) {

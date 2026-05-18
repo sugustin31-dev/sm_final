@@ -11,7 +11,7 @@ dejen comentarios públicos.
 - Deploy   : InfinityFree (gratis)
 
 ## Scope
-- [x] Formulario: Nombre + Mensaje
+- [x] Formulario: Nombre + Mensaje + Valoración (1-5)
 - [x] POST /api/comment.php
 - [x] GET  /api/comments.php (JSON)
 - [x] Feed sin recargar la página
@@ -28,6 +28,7 @@ CREATE TABLE comments (
   id         INT AUTO_INCREMENT PRIMARY KEY,
   name       VARCHAR(60)  NOT NULL,
   message    VARCHAR(500) NOT NULL,
+  rating     TINYINT UNSIGNED NOT NULL CHECK (rating BETWEEN 1 AND 5),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 ```

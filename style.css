@@ -38,7 +38,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -48,7 +49,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
   border-color: #4a90d9;
   box-shadow: 0 0 0 2px rgba(74, 144, 217, 0.2);
@@ -117,6 +119,13 @@ hr {
   font-size: 0.8rem;
   color: #888;
   margin-left: 0.5rem;
+}
+
+.comment .stars {
+  display: block;
+  color: #f5b342;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
 }
 
 .comment .message {
