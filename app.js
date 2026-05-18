@@ -1,4 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('theme-toggle');
+
+  function setTheme(theme) {
+    html.setAttribute('data-theme', theme);
+    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', theme);
+  }
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    setTheme(savedTheme);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    setTheme('dark');
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  });
   const form = document.getElementById('comment-form');
   const nameInput = document.getElementById('name');
   const messageInput = document.getElementById('message');
